@@ -1,0 +1,76 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Product 1",
+      "img": "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1571331044-bst-toys-fisher-price-phone-1571330613.jpg?crop=1xw:1xh;center,top&resize=480:*",
+      "price": "$2.99",
+      "postDate": "3 days ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Games & Toys"]
+    },
+    {
+      "id": 2,
+      "name": "Product 2",
+      "img": "https://images-na.ssl-images-amazon.com/images/I/61xEvJRRIpL._AC_SX425_.jpg",
+      "price": "$112.50",
+      "postDate": "2 days ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Instruments"]
+    },
+    {
+      "id": 3,
+      "name": "Product 3",
+      "img": "https://cdn.mos.cms.futurecdn.net/6t8Zh249QiFmVnkQdCCtHK.jpg",
+      "price": "$7.99",
+      "postDate": "5 days ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Electronics"]
+    },
+    {
+      "id": 4,
+      "name": "Product 4",
+      "img": "https://cdn3.volusion.com/ketcs.sefrp/v/vspfiles/photos/IGBRO18799-2.jpg",
+      "price": "$12.50",
+      "postDate": "6 days ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Babies & Kids", "Clothing & Shoes"]
+    },
+    {
+      "id": 5,
+      "name": "Product 5",
+      "img": "https://toystoryfangirl.files.wordpress.com/2019/01/img_6406.jpg?w=636&h=424",
+      "price": "$9.50",
+      "postDate": "2 days ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Games & Toys"]
+    },
+    {
+      "id": 6,
+      "name": "Product 6",
+      "img": "https://images-na.ssl-images-amazon.com/images/I/91CeJYT8uaL._AC_SX522_.jpg",
+      "price": "$63.99",
+      "postDate": "1 day ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Furniture", "Household"]
+    },
+    {
+      "id": 7,
+      "name": "Product 7",
+      "img": "https://media2.s-nbcnews.com/j/newscms/2020_25/3390425/board-games-kr-2x1-tease-200616_efaa02d7fe499c28b6078a19bdff3f8f.fit-760w.jpg",
+      "price": "$63.99",
+      "postDate": "1 month ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Games & Toys"]
+    },
+    {
+      "id": 8,
+      "name": "Product 8",
+      "img": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/5872/5872532_sd.jpg",
+      "price": "$63.99",
+      "postDate": "2 weeks ago",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "categories": ["Electronics", "Cell Phones"]
+    }
+  ]
+}
