@@ -1,19 +1,23 @@
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { useSelector } from "react-redux";
 
+// local
 import HomeStack from "./HomeStack";
 import SellingStack from "./SellingStack";
 import UploadStack from "./UploadStack";
 
 import ProfileScreen from "../screens/ProfileScreen";
 import Colors from "../config/colors";
-import AllMessages from "../screens/AllMessagesScreen";
-import UploadCamera from "../screens/UploadCamera";
+import AllMessagesScreen from "../screens/AllMessagesScreen";
+import LoginScreen from "../screens/LoginScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
 export default function HomeTabs() {
+  const currentUser = useSelector((state) => state.user);
+
   return (
     <Tab.Navigator
       // shifting={true}
@@ -35,7 +39,7 @@ export default function HomeTabs() {
       />
       <Tab.Screen
         name="Messages"
-        component={AllMessages}
+        component={currentUser ? AllMessagesScreen : LoginScreen}
         options={{
           tabBarColor: Colors.cardBG,
           tabBarLabel: "Messages",
