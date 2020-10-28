@@ -37,6 +37,7 @@ function LoginScreen() {
             { opacity: pressed ? 0.6 : 1 },
             styles.button,
           ]}
+          onPress={login}
         >
           <Text style={[styles.text, { fontWeight: "bold" }]}>Log In</Text>
         </Pressable>
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cardBG,
     borderRadius: 10,
     padding: 10,
-    margin: 10,
+    margin: 12,
   },
   text: {
     fontSize: 32,
@@ -72,8 +73,10 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: Colors.purpleHighlight,
-    padding: 6,
-    margin: 20,
+    padding: 4,
+    margin: 15,
+    marginLeft: 40,
+    marginRight: 40,
     borderRadius: 10,
     alignItems: "center",
   },

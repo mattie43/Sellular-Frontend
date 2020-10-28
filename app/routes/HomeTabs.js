@@ -50,7 +50,7 @@ export default function HomeTabs() {
       />
       <Tab.Screen
         name="Upload"
-        component={UploadStack}
+        component={currentUser ? UploadStack : LoginScreen}
         options={{
           tabBarColor: Colors.cardBG,
           tabBarLabel: "Upload",
@@ -61,7 +61,7 @@ export default function HomeTabs() {
       />
       <Tab.Screen
         name="Selling"
-        component={SellingStack}
+        component={currentUser ? SellingStack : LoginScreen}
         options={{
           tabBarColor: Colors.cardBG,
           tabBarLabel: "Selling",
@@ -72,7 +72,7 @@ export default function HomeTabs() {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={currentUser ? ProfileScreen : LoginScreen}
         options={{
           tabBarColor: Colors.cardBG,
           tabBarLabel: "Profile",
