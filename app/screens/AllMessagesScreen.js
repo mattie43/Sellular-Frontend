@@ -16,41 +16,43 @@ function AllMessagesScreen({ navigation, route }) {
 
   function renderMessages() {
     // get messages from DB and render them
-    return [1, 2, 3, 4, 5].map((message, i) => (
-      <Pressable
-        key={i}
-        onPress={() => navigation.push("SingleMessageScreen")}
-        style={({ pressed }) => [
-          styles.singleMessagePressable,
-          {
-            borderColor:
-              i % 2 === 0 ? Colors.purpleHighlight : Colors.blueHighlight,
-          },
-          {
-            backgroundColor: pressed
-              ? i % 2 === 0
-                ? Colors.purpleHighlight
-                : Colors.blueHighlight
-              : "transparent",
-          },
-        ]}
-      >
-        <View style={styles.singleMessageContainer}>
-          <Text style={styles.singleMessage}>Seller Name</Text>
-          <Text style={styles.singleMessage}>Product Name</Text>
-          <Pressable
-            style={{ display: showDelete ? "flex" : "none" }}
-            onPress={() => deleteMessage(i)}
-          >
-            <Icon name={"times"} size={20} color="red" />
-          </Pressable>
-        </View>
-      </Pressable>
+    const arr = [1, 2, 3, 4, 5];
+    return arr.map((message, i) => (
+      <>
+        <Pressable
+          key={i}
+          onPress={() => navigation.push("SingleMessageScreen")}
+          style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+        >
+          <View style={styles.singleMessageContainer}>
+            <Text style={styles.singleMessageText}>Seller Name</Text>
+            <Text style={styles.singleMessageText}>Product Name</Text>
+            <Pressable
+              style={({ pressed }) => [
+                { display: showDelete ? "flex" : "none" },
+                { opacity: pressed ? 0.6 : 1 },
+              ]}
+              onPress={() => deleteMessage(i)}
+            >
+              <Icon name={"times"} size={20} color="red" />
+            </Pressable>
+          </View>
+        </Pressable>
+        {arr.length === i + 1 ? null : (
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: Colors.purpleHighlight,
+              width: "85%",
+              alignSelf: "center",
+            }}
+          />
+        )}
+      </>
     ));
   }
 
   function deleteMessage(i) {
-    console.log(i);
     Alert.alert("", "Are you sure you want to delete this conversation?", [
       {
         text: "Yes",
@@ -65,20 +67,13 @@ function AllMessagesScreen({ navigation, route }) {
     ]);
   }
 
-  function addDelete() {
-    setShowDelete(!showDelete);
-  }
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.messageBar}>
         <Text style={styles.title}>Messages</Text>
         <Pressable
-          style={({ pressed }) => [
-            { opacity: pressed ? 0.6 : 1 },
-            { right: 14 },
-          ]}
-          onPress={addDelete}
+          style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+          onPress={() => setShowDelete(!showDelete)}
         >
           <Icon name={"edit"} size={24} color={Colors.ghostWhite} />
         </Pressable>
@@ -91,7 +86,7 @@ function AllMessagesScreen({ navigation, route }) {
           alignSelf: "center",
         }}
       />
-      <View style={styles.messages}>{renderMessages()}</View>
+      <View style={styles.messagesContainer}>{renderMessages()}</View>
     </ScrollView>
   );
 }
@@ -113,22 +108,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: Colors.ghostWhite,
   },
-  messages: {
-    paddingTop: 8,
-  },
-  singleMessagePressable: {
-    borderWidth: 2,
-    padding: 8,
-    borderRadius: 10,
-    marginTop: 4,
+  messagesContainer: {
+    marginTop: 14,
+    borderRadius: 15,
+    backgroundColor: Colors.cardBG,
   },
   singleMessageContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    padding: 10,
   },
-  singleMessage: {
-    fontSize: 20,
+  singleMessageText: {
+    fontSize: 22,
     color: Colors.ghostWhite,
   },
 });

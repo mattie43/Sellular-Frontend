@@ -31,16 +31,30 @@ export default function HomeScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const [productList, setProductList] = useState([]);
   const [currentCategory, setCurrentCategory] = useState("");
-
-  function updateSearch(e) {
-    setSearch(e);
-  }
+  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:3000/products")
       .then((resp) => resp.json())
-      .then((data) => setProductList(data));
-  }, []);
+      .then((data) => {
+        setProductList(
+          data.map((item) =>
+            Object.assign(item, {
+              height: Math.floor(Math.random() * (230 - 200 + 1)) + 200,
+            })
+          )
+        );
+        setIsFetching(false);
+      });
+  }, [isFetching]);
+
+  function onRefresh() {
+    setIsFetching(true);
+  }
+
+  function updateSearch(e) {
+    setSearch(e);
+  }
 
   function categoryCheck() {
     if (currentCategory === "") {
@@ -59,12 +73,11 @@ export default function HomeScreen({ navigation }) {
   }
 
   function renderProducts(item) {
-    const generateHeight = Math.floor(Math.random() * (230 - 200 + 1)) + 200;
     return (
       <Pressable
         style={({ pressed }) => [
           {
-            height: generateHeight,
+            height: item.height,
             width: "100%",
             padding: 1,
           },
@@ -150,6 +163,8 @@ export default function HomeScreen({ navigation }) {
         </ScrollView>
       </View>
       <MasonryList
+        onRefresh={() => onRefresh()}
+        refreshing={isFetching}
         style={{ backgroundColor: Colors.mainBG }}
         data={filteredProducts()}
         numColumns={3}
