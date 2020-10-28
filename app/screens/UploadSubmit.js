@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -15,6 +15,27 @@ import Colors from "../config/colors";
 function UploadSubmit({ navigation, route }) {
   const imgUri = route.params;
   const dimensions = Dimensions.get("window").width;
+  const [itemName, setItemName] = useState("");
+  const [itemPrice, setItemPrice] = useState("");
+  const [itemDesc, setItemDesc] = useState("");
+
+  function uploadItem() {
+    const formData = new FormData();
+    formData.append("file", imgUri);
+    formData.append("name", itemName);
+    formData.append("price", itemPrice);
+    formData.append("description", itemDesc);
+
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: formData,
+    };
+
+    fetch("http://localhost:3000/products", options);
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -25,11 +46,26 @@ function UploadSubmit({ navigation, route }) {
       <View style={styles.infoContainer}>
         <View style={styles.card}>
           <Text style={styles.infoText}>Give this item a name</Text>
-          <TextInput style={styles.input} placeholder="Product name.." />
+          <TextInput
+            style={styles.input}
+            placeholder="Product name.."
+            onChangeText={(name) => setItemName(name)}
+            value={itemName}
+          />
           <Text style={styles.infoText}>Give this item a price</Text>
-          <TextInput style={styles.input} placeholder="Product price.." />
+          <TextInput
+            style={styles.input}
+            placeholder="Product price.."
+            onChangeText={(price) => setItemPrice(price)}
+            value={itemPrice}
+          />
           <Text style={styles.infoText}>Give this item a description</Text>
-          <TextInput style={styles.input} placeholder="Product description.." />
+          <TextInput
+            style={styles.input}
+            placeholder="Product description.."
+            onChangeText={(desc) => setItemDesc(desc)}
+            value={itemDesc}
+          />
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
@@ -47,6 +83,7 @@ function UploadSubmit({ navigation, route }) {
                 styles.cancelBtn,
                 { opacity: pressed ? 0.6 : 1, backgroundColor: "green" },
               ]}
+              onPress={uploadItem}
             >
               <Text style={styles.cancelText}>Upload</Text>
             </Pressable>
