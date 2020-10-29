@@ -124,6 +124,16 @@ const styles = StyleSheet.create({
     margin: 8,
     backgroundColor: Colors.cardBG,
     padding: 8,
+    // box shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // box shadow end
   },
   image: {
     height: 110,

@@ -12,20 +12,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import MasonryList from "@appandflow/masonry-list";
 
 import Colors from "../config/colors";
-
-const categoriesList = [
-  ["car-side", "Cars"],
-  ["home", "Household"],
-  ["laptop", "Electronics"],
-  ["baby-carriage", "Babies & Kids"],
-  ["tshirt", "Clothing & Shoes"],
-  ["couch", "Furniture"],
-  ["mobile-alt", "Cell Phones"],
-  ["tools", "Tools"],
-  ["gamepad", "Games & Toys"],
-  ["football-ball", "Sports"],
-  ["guitar", "Instruments"],
-];
+import { categoriesList } from "../config/categories";
 
 export default function HomeScreen({ navigation }) {
   const [search, setSearch] = useState("");
@@ -86,7 +73,7 @@ export default function HomeScreen({ navigation }) {
         onPress={() => navigation.push("ProductScreen", item)}
       >
         <Image
-          source={{ uri: item.img }}
+          source={{ uri: item.image_64 }}
           style={{ flex: 1 }}
           imageStyle={{ borderRadius: 2 }}
           resizeMode={"cover"}

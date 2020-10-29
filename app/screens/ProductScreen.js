@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
+  Dimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
@@ -14,13 +15,15 @@ import Colors from "../config/colors";
 
 function ProductScreen({ navigation, route }) {
   const Product = route.params;
+  const dimensions = Dimensions.get("window").width;
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ImageBackground
-        source={{ uri: Product.img }}
+        source={{ uri: Product.image_64 }}
         style={{
           opacity: 0.9,
-          width: "100%",
+          width: dimensions,
           height: 400,
           resizeMode: "contain",
         }}
@@ -40,7 +43,10 @@ function ProductScreen({ navigation, route }) {
           />
         </Pressable>
       </ImageBackground>
-      <Text style={styles.postDate}>Posted {Product.postDate}</Text>
+      <Text style={styles.postDate}>
+        Posted{" "}
+        {Product.post_date === 0 ? "Today" : Product.post_date + " days ago"}
+      </Text>
       <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>
         <View
           style={[
@@ -56,7 +62,9 @@ function ProductScreen({ navigation, route }) {
             style={{ height: 100, width: 100, borderRadius: 100 }}
             source={{ uri: "https://www.w3schools.com/howto/img_avatar2.png" }}
           />
-          <Text style={[styles.name, { alignSelf: "auto" }]}>Seller Name</Text>
+          <Text style={[styles.name, { alignSelf: "auto" }]}>
+            {Product.user.email}
+          </Text>
         </View>
       </Pressable>
       <View style={styles.card}>
@@ -69,7 +77,7 @@ function ProductScreen({ navigation, route }) {
           }}
         >
           <Text style={styles.name}>{Product.name}</Text>
-          <Text style={styles.name}>{Product.price}</Text>
+          <Text style={styles.name}>${Product.price}</Text>
         </View>
         <View
           style={{
@@ -78,7 +86,7 @@ function ProductScreen({ navigation, route }) {
             width: "85%",
           }}
         />
-        <Text style={styles.desc}>{Product.desc}</Text>
+        <Text style={styles.desc}>{Product.description}</Text>
       </View>
       <Pressable
         style={({ pressed }) => [

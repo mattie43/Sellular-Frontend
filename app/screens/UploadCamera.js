@@ -74,12 +74,11 @@ export default function UploadCamera({ navigation, route }) {
             ]}
             onPress={async () => {
               if (cameraRef) {
-                let photo = await cameraRef.takePictureAsync();
+                let photo = await cameraRef.takePictureAsync({ base64: true });
                 navigation.push("UploadImage", photo);
               }
             }}
           >
-            {/* <Icon name="circle" size={40} color={Colors.ghostWhite} /> */}
             <View
               style={{
                 borderWidth: 2,

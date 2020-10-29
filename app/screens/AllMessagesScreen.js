@@ -18,9 +18,8 @@ function AllMessagesScreen({ navigation, route }) {
     // get messages from DB and render them
     const arr = [1, 2, 3, 4, 5];
     return arr.map((message, i) => (
-      <>
+      <View key={i}>
         <Pressable
-          key={i}
           onPress={() => navigation.push("SingleMessageScreen")}
           style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
         >
@@ -48,7 +47,7 @@ function AllMessagesScreen({ navigation, route }) {
             }}
           />
         )}
-      </>
+      </View>
     ));
   }
 
@@ -112,6 +111,16 @@ const styles = StyleSheet.create({
     marginTop: 14,
     borderRadius: 15,
     backgroundColor: Colors.cardBG,
+    // box shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // box shadow end
   },
   singleMessageContainer: {
     flexDirection: "row",

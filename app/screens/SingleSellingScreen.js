@@ -11,20 +11,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 import Colors from "../config/colors";
-
-const categoriesList = {
-  Cars: "car-side",
-  Household: "home",
-  Electronics: "laptop",
-  "Babies & Kids": "baby-carriage",
-  "Clothing & Shoes": "tshirt",
-  Furniture: "couch",
-  "Cell Phones": "mobile-alt",
-  Tools: "tools",
-  "Games & Toys": "gamepad",
-  Sports: "football-ball",
-  Instruments: "guitar",
-};
+import { showCategory } from "../config/categories";
 
 function SellingStack({ navigation, route }) {
   const Product = route.params;
@@ -32,7 +19,7 @@ function SellingStack({ navigation, route }) {
   function renderCategories() {
     return ["Electronics", "Babies & Kids", "Games & Toys"].map((item, i) => (
       <View style={{ marginRight: 6, marginLeft: 6, alignItems: "center" }}>
-        <Icon name={categoriesList[item]} size={30} color={Colors.ghostWhite} />
+        <Icon name={showCategory[item]} size={30} color={Colors.ghostWhite} />
         <Text style={{ color: Colors.ghostWhite }}>{item}</Text>
       </View>
     ));
@@ -92,6 +79,16 @@ const styles = StyleSheet.create({
     padding: 8,
     justifyContent: "space-evenly",
     alignItems: "center",
+    // box shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // box shadow end
   },
   infoText: {
     fontSize: 20,

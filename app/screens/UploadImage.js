@@ -11,10 +11,10 @@ import {
 import Colors from "../config/colors";
 
 function UploadImage({ navigation, route }) {
-  const imgUri = route.params.uri;
+  const photo = route.params;
 
   return (
-    <ImageBackground source={{ uri: imgUri }} style={styles.background}>
+    <ImageBackground source={{ uri: photo.uri }} style={styles.background}>
       <Pressable
         style={({ pressed }) => [styles.button, { opacity: pressed ? 0.6 : 1 }]}
         onPress={() => navigation.pop()}
@@ -23,7 +23,7 @@ function UploadImage({ navigation, route }) {
       </Pressable>
       <Pressable
         style={({ pressed }) => [styles.button, { opacity: pressed ? 0.6 : 1 }]}
-        onPress={() => navigation.push("UploadSubmit", imgUri)}
+        onPress={() => navigation.push("UploadSubmit", photo)}
       >
         <Text style={styles.buttonText}>Looks Good!</Text>
       </Pressable>
@@ -41,6 +41,16 @@ const styles = StyleSheet.create({
     margin: 15,
     alignItems: "center",
     justifyContent: "center",
+    // box shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // box shadow end
   },
   buttonText: {
     color: Colors.ghostWhite,
