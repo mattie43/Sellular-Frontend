@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 
@@ -22,6 +22,7 @@ function UploadSubmit({ navigation, route }) {
   const [itemDollar, setItemDollar] = useState("");
   const [itemCent, setItemCent] = useState("00");
   const [itemDesc, setItemDesc] = useState("");
+  const dispatch = useDispatch();
 
   function sendToBackend() {
     const price =
@@ -47,7 +48,7 @@ function UploadSubmit({ navigation, route }) {
     fetch("http://localhost:3000/products", options)
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
+        dispatch({ type: "ADD_PRODUCT", payload: data });
         navigation.popToTop();
         navigation.navigate("AllSellingScreen");
       });

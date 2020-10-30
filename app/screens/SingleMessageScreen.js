@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  Image,
-  ImageBackground,
-  Text,
-  View,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-  Keyboard,
-} from "react-native";
+import React from "react";
+import { Image, Text, View, StyleSheet, Pressable } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 

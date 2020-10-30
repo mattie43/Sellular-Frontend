@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable, Image } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
+import Logo from "../../assets/logo.png";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -80,6 +81,7 @@ function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      <Image source={Logo} style={styles.logo} />
       <View style={styles.card}>
         <Text style={styles.text}>Email:</Text>
         <TextInput
@@ -160,5 +162,11 @@ const styles = StyleSheet.create({
     marginRight: 40,
     borderRadius: 10,
     alignItems: "center",
+  },
+  logo: {
+    width: 400,
+    margin: -40,
+    alignSelf: "center",
+    resizeMode: "contain",
   },
 });

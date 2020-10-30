@@ -5,7 +5,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 import Colors from "../config/colors";
 
-export default function UploadCamera({ navigation, route }) {
+export default function UploadCamera({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);

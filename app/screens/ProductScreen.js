@@ -45,7 +45,7 @@ function ProductScreen({ navigation, route }) {
       </ImageBackground>
       <Text style={styles.postDate}>
         Posted{" "}
-        {Product.post_date === 0 ? "Today" : Product.post_date + " days ago"}
+        {Product.post_date < 1 ? "Today" : Product.post_date + " days ago"}
       </Text>
       <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>
         <View
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     marginRight: 50,
     marginBottom: 20,
+    marginTop: 5,
     borderRadius: 10,
     alignItems: "center",
     // box shadow

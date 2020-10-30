@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  ImageBackground,
   Pressable,
   Image,
 } from "react-native";
@@ -14,7 +13,7 @@ import Colors from "../config/colors";
 import { showCategory } from "../config/categories";
 
 function SellingStack({ navigation, route }) {
-  const Product = route.params;
+  const item = route.params;
 
   function renderCategories() {
     return ["Electronics", "Babies & Kids", "Games & Toys"].map((item, i) => (
@@ -48,7 +47,7 @@ function SellingStack({ navigation, route }) {
         />
       </Pressable>
       <Image
-        source={{ uri: Product.img }}
+        source={{ uri: item.image_64 }}
         style={{
           opacity: 0.9,
           width: "100%",
@@ -56,9 +55,9 @@ function SellingStack({ navigation, route }) {
         }}
       />
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Product Name</Text>
-        <Text style={styles.infoText}>$10.99</Text>
-        <Text style={styles.infoText}>Product Desc</Text>
+        <Text style={styles.infoText}>{item.name}</Text>
+        <Text style={styles.infoText}>${item.price}</Text>
+        <Text style={styles.infoText}>{item.description}</Text>
         <View style={styles.categoryContainer}>{renderCategories()}</View>
       </View>
     </ScrollView>
@@ -102,5 +101,17 @@ const styles = StyleSheet.create({
   catText: {
     fontSize: 18,
     color: Colors.ghostWhite,
+  },
+  backIcon: {
+    margin: 4,
+    // box shadow
+    shadowColor: Colors.ghostWhite,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    // box shadow end
   },
 });

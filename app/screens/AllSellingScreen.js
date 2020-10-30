@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -9,13 +9,25 @@ import {
   Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 
 function SellingStack({ navigation }) {
+  const currentUser = useSelector((state) => state.user);
+  const sellingList = useSelector((state) => state.userProductList);
   const [showDelete, setShowDelete] = useState(false);
+  const dispatch = useDispatch();
 
-  function deleteMessage(i) {
+  useEffect(() => {
+    fetch(`http://localhost:3000/users/${currentUser.id}`)
+      .then((resp) => resp.json())
+      .then((data) =>
+        dispatch({ type: "GET_PRODUCTS", payload: data.products })
+      );
+  }, []);
+
+  function deleteMessage(id) {
     Alert.alert("", "Are you sure you want to delete this product?", [
       {
         text: "Yes",
@@ -31,21 +43,16 @@ function SellingStack({ navigation }) {
   }
 
   function renderProducts() {
-    return [1, 2, 3].map((item, i) => (
+    return sellingList.map((item) => (
       <Pressable
-        key={i}
+        key={item.id}
         style={({ pressed }) => [
           styles.singleMessagePressable,
           {
             opacity: pressed ? 0.6 : 1,
           },
         ]}
-        onPress={() =>
-          navigation.push("SingleSellingScreen", {
-            img:
-              "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1571331044-bst-toys-fisher-price-phone-1571330613.jpg?crop=1xw:1xh;center,top&resize=480:*",
-          })
-        }
+        onPress={() => navigation.push("SingleSellingScreen", item)}
       >
         <View style={styles.itemContainer}>
           <Pressable
@@ -54,20 +61,14 @@ function SellingStack({ navigation }) {
               { display: showDelete ? "flex" : "none" },
               { opacity: pressed ? 0.6 : 1 },
             ]}
-            onPress={() => deleteMessage(i)}
+            onPress={() => deleteMessage(item.id)}
           >
             <Icon name={"times"} size={20} color="red" />
           </Pressable>
-          <Image
-            source={{
-              uri:
-                "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1571331044-bst-toys-fisher-price-phone-1571330613.jpg?crop=1xw:1xh;center,top&resize=480:*",
-            }}
-            style={styles.image}
-          />
+          <Image source={{ uri: item.image_64 }} style={styles.image} />
           <View style={styles.itemTextContainer}>
-            <Text style={styles.itemText}>Product Name</Text>
-            <Text style={styles.itemText}>$10.99</Text>
+            <Text style={styles.itemText}>{item.name}</Text>
+            <Text style={styles.itemText}>${item.price}</Text>
           </View>
         </View>
       </Pressable>
