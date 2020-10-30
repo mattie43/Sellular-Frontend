@@ -20,7 +20,7 @@ function ProductScreen({ navigation, route }) {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ImageBackground
-        source={{ uri: Product.image_64 }}
+        source={{ uri: Product.img_url }}
         style={{
           opacity: 0.9,
           width: dimensions,

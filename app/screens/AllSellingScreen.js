@@ -65,7 +65,7 @@ function SellingStack({ navigation }) {
           >
             <Icon name={"times"} size={20} color="red" />
           </Pressable>
-          <Image source={{ uri: item.image_64 }} style={styles.image} />
+          <Image source={{ uri: item.img_url }} style={styles.image} />
           <View style={styles.itemTextContainer}>
             <Text style={styles.itemText}>{item.name}</Text>
             <Text style={styles.itemText}>${item.price}</Text>

@@ -73,7 +73,7 @@ export default function HomeScreen({ navigation }) {
         onPress={() => navigation.push("ProductScreen", item)}
       >
         <Image
-          source={{ uri: item.image_64 }}
+          source={{ uri: item.img_url }}
           style={{ flex: 1 }}
           imageStyle={{ borderRadius: 2 }}
           resizeMode={"cover"}

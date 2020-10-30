@@ -47,7 +47,7 @@ function SellingStack({ navigation, route }) {
         />
       </Pressable>
       <Image
-        source={{ uri: item.image_64 }}
+        source={{ uri: item.img_url }}
         style={{
           opacity: 0.9,
           width: "100%",
