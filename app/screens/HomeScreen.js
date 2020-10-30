@@ -10,11 +10,13 @@ import {
 import { SearchBar } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import MasonryList from "@appandflow/masonry-list";
+import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 import { categoriesList } from "../config/categories";
 
 export default function HomeScreen({ navigation }) {
+  const currentUser = useSelector((state) => state.user);
   const [search, setSearch] = useState("");
   const [productList, setProductList] = useState([]);
   const [currentCategory, setCurrentCategory] = useState("");
@@ -60,6 +62,9 @@ export default function HomeScreen({ navigation }) {
   }
 
   function renderProducts(item) {
+    if (currentUser && currentUser.id === item.user.id) {
+      return;
+    }
     return (
       <Pressable
         style={({ pressed }) => [

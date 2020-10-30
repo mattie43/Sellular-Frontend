@@ -14,13 +14,13 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import Colors from "../config/colors";
 
 function ProductScreen({ navigation, route }) {
-  const Product = route.params;
+  const product = route.params;
   const dimensions = Dimensions.get("window").width;
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ImageBackground
-        source={{ uri: Product.img_url }}
+        source={{ uri: product.img_url }}
         style={{
           opacity: 0.9,
           width: dimensions,
@@ -45,7 +45,7 @@ function ProductScreen({ navigation, route }) {
       </ImageBackground>
       <Text style={styles.postDate}>
         Posted{" "}
-        {Product.post_date < 1 ? "Today" : Product.post_date + " days ago"}
+        {product.post_date < 1 ? "Today" : product.post_date + " days ago"}
       </Text>
       <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>
         <View
@@ -63,7 +63,7 @@ function ProductScreen({ navigation, route }) {
             source={{ uri: "https://www.w3schools.com/howto/img_avatar2.png" }}
           />
           <Text style={[styles.name, { alignSelf: "auto" }]}>
-            {Product.user.email}
+            {product.user.email}
           </Text>
         </View>
       </Pressable>
@@ -76,8 +76,8 @@ function ProductScreen({ navigation, route }) {
             marginBottom: 15,
           }}
         >
-          <Text style={styles.name}>{Product.name}</Text>
-          <Text style={styles.name}>${Product.price}</Text>
+          <Text style={styles.name}>{product.name}</Text>
+          <Text style={styles.name}>${product.price}</Text>
         </View>
         <View
           style={{
@@ -86,13 +86,14 @@ function ProductScreen({ navigation, route }) {
             width: "85%",
           }}
         />
-        <Text style={styles.desc}>{Product.description}</Text>
+        <Text style={styles.desc}>{product.description}</Text>
       </View>
       <Pressable
         style={({ pressed }) => [
           styles.messageBtn,
           { opacity: pressed ? 0.6 : 1 },
         ]}
+        onPress={() => navigation.navigate("SingleMessageScreen", product)}
       >
         <Text style={styles.messageText}>Message the seller</Text>
       </Pressable>

@@ -2,10 +2,66 @@ import React from "react";
 import { Image, Text, View, StyleSheet, Pressable } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useSelector, useDispatch } from "react-redux";
+
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import firebaseConfig from "../firebase/firebase";
 
 import Colors from "../config/colors";
 
 export default function SingleMessageScreen({ navigation, route }) {
+  const currentUser = useSelector((state) => state.user);
+  const seller = route.params.user;
+  const product = route.params;
+
+  async function fbtemp() {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const firestore = firebase.firestore();
+    let conversationID = "";
+    if (currentUser.id < seller.id) {
+      conversationID =
+        currentUser.id.toString() +
+        seller.id.toString() +
+        product.id.toString();
+    } else {
+      conversationID =
+        seller.id.toString() +
+        currentUser.id.toString() +
+        product.id.toString();
+    }
+    const conversation = firestore.collection("conversations");
+    conversation.exists ? console.log("no collection") : console.log("found");
+    const doc = await conversation.doc(conversationID).get();
+    if (!doc.exists) {
+      firestore.add("test");
+    } else {
+    }
+    // console.log("Document data:", doc.data());
+    // console.log(new Date());
+  }
+
+  // function chatRoom() {
+  //   const query = messagesRef.orderBy("createdAt").limit(25);
+  //   const [messages] = useCollectionData(query, { idField: "id" });
+
+  //   console.log(messages);
+  //   setTimeout(() => console.log("uid", newUser), 2000);
+  // }
+
+  // function sendMsg() {
+  //   messagesRef.add({
+  //     text: "test2",
+  //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+  //     id: "lIiDPJUWlfoMQC3gKque",
+  //   });
+  // }
+
   return (
     <View style={styles.container}>
       <Pressable
@@ -41,7 +97,7 @@ export default function SingleMessageScreen({ navigation, route }) {
               style={styles.image}
             />
           </Pressable>
-          <Text style={styles.infoText}>Seller Name</Text>
+          <Text style={styles.infoText}>{seller.email}</Text>
         </View>
         <View>
           <Pressable
@@ -50,13 +106,12 @@ export default function SingleMessageScreen({ navigation, route }) {
           >
             <Image
               source={{
-                uri:
-                  "https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1571331044-bst-toys-fisher-price-phone-1571330613.jpg?crop=1xw:1xh;center,top&resize=480:*",
+                uri: product.img_url,
               }}
               style={styles.image}
             />
           </Pressable>
-          <Text style={styles.infoText}>Product Name</Text>
+          <Text style={styles.infoText}>{product.name}</Text>
         </View>
       </View>
       <View
@@ -68,6 +123,9 @@ export default function SingleMessageScreen({ navigation, route }) {
           alignSelf: "center",
         }}
       />
+      <Pressable onPress={fbtemp}>
+        <Text>CLICK</Text>
+      </Pressable>
       <View style={styles.inputContainer}>
         <TextInput style={styles.input} placeholder="Chat here.." />
         <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>

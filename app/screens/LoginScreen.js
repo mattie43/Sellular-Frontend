@@ -6,21 +6,14 @@ import { useDispatch } from "react-redux";
 import Colors from "../config/colors";
 import Logo from "../../assets/logo.png";
 
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import firebaseConfig from "../firebase/firebase";
-
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
-  const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  function login(uid) {
+  function login() {
+    setLoggingIn(true);
     const options = {
       method: "POST",
       headers: {
@@ -30,53 +23,15 @@ function LoginScreen() {
       body: JSON.stringify({
         email,
         password,
-        uid,
       }),
     };
 
     fetch("http://localhost:3000/users", options)
       .then((resp) => resp.json())
-      .then((data) => dispatch({ type: "LOG_IN", payload: data }));
-  }
-
-  async function getUser() {
-    setLoggingIn(true);
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    let signInError = "";
-    let createUserError = "";
-
-    let user = await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch((error) => (signInError = JSON.parse(JSON.stringify(error))));
-
-    if (signInError.code) {
-      if (signInError.code === "auth/user-not-found") {
-        user = await firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .catch(
-            (error) => (createUserError = JSON.parse(JSON.stringify(error)))
-          );
-        if (createUserError.code) {
-          setError("Weak Password (Must be at least 6 characters)");
-          setLoggingIn(false);
-        }
-      } else {
-        setError("Invalid E-mail or Password");
+      .then((data) => {
+        dispatch({ type: "LOG_IN", payload: data });
         setLoggingIn(false);
-      }
-    }
-
-    if (user.user) {
-      setLoggingIn(false);
-      setError("");
-      login(user.user.uid);
-    }
+      });
   }
 
   return (
@@ -98,27 +53,13 @@ function LoginScreen() {
           value={password}
           onChangeText={(value) => setPassword(value)}
         ></TextInput>
-        {error ? (
-          <Text
-            style={{
-              color: "red",
-              fontSize: 24,
-              fontWeight: "bold",
-              alignSelf: "center",
-              marginTop: 12,
-              textAlign: "center",
-            }}
-          >
-            {error}
-          </Text>
-        ) : null}
         <Pressable
           disabled={loggingIn}
           style={({ pressed }) => [
             { opacity: loggingIn || pressed ? 0.6 : 1 },
             styles.button,
           ]}
-          onPress={getUser}
+          onPress={login}
         >
           <Text style={[styles.text, { fontWeight: "bold" }]}>
             {loggingIn ? "Logging in.." : "Log In"}

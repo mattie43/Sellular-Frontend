@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -8,11 +8,14 @@ import {
   Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 
 function AllMessagesScreen({ navigation, route }) {
   const [showDelete, setShowDelete] = useState(false);
+
+  useEffect(() => {}, []);
 
   function renderMessages() {
     // get messages from DB and render them
