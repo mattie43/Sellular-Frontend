@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
   user: null,
   userProductList: [],
+  messages: [],
 };
 
 export default function rootReducer(state = INITIAL_STATE, action) {
@@ -8,7 +9,7 @@ export default function rootReducer(state = INITIAL_STATE, action) {
     case "LOG_IN":
       return { ...state, user: action.payload };
     case "LOG_OUT":
-      return { user: null, userProductList: [] };
+      return { user: null, userProductList: [], messages: [] };
     case "GET_PRODUCTS":
       return { ...state, userProductList: action.payload };
     case "ADD_PRODUCT":
@@ -16,6 +17,10 @@ export default function rootReducer(state = INITIAL_STATE, action) {
         ...state,
         userProductList: state.userProductList.concat(action.payload),
       };
+    case "GET_MESSAGES":
+      return { ...state, messages: action.payload };
+    case "ADD_MESSAGE":
+      return { ...state, messages: state.messages.concat(action.payload) };
     default:
       return state;
   }

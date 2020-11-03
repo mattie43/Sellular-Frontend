@@ -13,6 +13,8 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
+import URL from "../config/globalURL";
+import { categoriesList } from "../config/categories";
 
 function UploadSubmit({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
@@ -22,6 +24,7 @@ function UploadSubmit({ navigation, route }) {
   const [itemDollar, setItemDollar] = useState("");
   const [itemCent, setItemCent] = useState("00");
   const [itemDesc, setItemDesc] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const dispatch = useDispatch();
 
   function sendToBackend() {
@@ -42,16 +45,62 @@ function UploadSubmit({ navigation, route }) {
         description: itemDesc,
         user_id: currentUser.id,
         image_64: photo.base64,
+        categories: selectedCategories,
       }),
     };
 
-    fetch("http://localhost:3000/products", options)
+    fetch(`${URL}/products`, options)
       .then((resp) => resp.json())
       .then((data) => {
         dispatch({ type: "ADD_PRODUCT", payload: data });
         navigation.popToTop();
         navigation.navigate("AllSellingScreen");
       });
+  }
+
+  function addCategory(cat) {
+    if (selectedCategories.includes(cat)) {
+      setSelectedCategories(
+        selectedCategories.filter((category) => category !== cat)
+      );
+    } else if (selectedCategories.length < 3) {
+      setSelectedCategories([...selectedCategories, cat]);
+    } else {
+      setSelectedCategories([...selectedCategories.slice(1), cat]);
+    }
+  }
+
+  function renderCategories() {
+    return categoriesList.map((iconArr, i) => (
+      <Pressable
+        key={i}
+        style={{
+          alignItems: "center",
+          backgroundColor: Colors.cardBG,
+          padding: 10,
+        }}
+        onPress={() => addCategory(iconArr[1])}
+      >
+        <Icon
+          name={iconArr[0]}
+          size={30}
+          color={
+            selectedCategories.includes(iconArr[1])
+              ? Colors.blueHighlight
+              : Colors.ghostWhite
+          }
+        />
+        <Text
+          style={{
+            color: selectedCategories.includes(iconArr[1])
+              ? Colors.blueHighlight
+              : Colors.ghostWhite,
+          }}
+        >
+          {iconArr[1]}
+        </Text>
+      </Pressable>
+    ));
   }
 
   return (
@@ -112,6 +161,12 @@ function UploadSubmit({ navigation, route }) {
             onChangeText={(value) => setItemDesc(value)}
             value={itemDesc}
           />
+          <Text style={[styles.infoText, { textAlign: "center" }]}>
+            Select up to 3 categories
+          </Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {renderCategories()}
+          </ScrollView>
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
@@ -153,8 +208,9 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.cardBG,
-    borderRadius: 10,
-    margin: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    marginBottom: 15,
     padding: 10,
     // box shadow
     shadowColor: "#000",

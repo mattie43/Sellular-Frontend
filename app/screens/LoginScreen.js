@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 import Logo from "../../assets/logo.png";
+import URL from "../config/globalURL";
 
 function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ function LoginScreen() {
       }),
     };
 
-    fetch("http://localhost:3000/users", options)
+    fetch(`${URL}/users`, options)
       .then((resp) => resp.json())
       .then((data) => {
         dispatch({ type: "LOG_IN", payload: data });

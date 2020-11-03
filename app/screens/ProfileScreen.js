@@ -1,11 +1,14 @@
 import React from "react";
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-
+import { useDispatch } from "react-redux";
 import Svg, { Path } from "react-native-svg";
+
 import Colors from "../config/colors";
 
 function ProfileScreen() {
+  const dispatch = useDispatch();
+
   function renderStar(count = 0) {
     const returnStars = [];
     let goldCount = 0;
@@ -32,8 +35,9 @@ function ProfileScreen() {
             { opacity: pressed ? 0.6 : 1 },
             { position: "absolute", right: 14 },
           ]}
+          onPress={() => dispatch({ type: "LOG_OUT" })}
         >
-          <Icon name={"edit"} size={24} color={Colors.ghostWhite} />
+          <Icon name={"sign-out-alt"} size={24} color={Colors.ghostWhite} />
         </Pressable>
         <Image
           source={{ uri: "https://www.w3schools.com/howto/img_avatar2.png" }}

@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 import { categoriesList } from "../config/categories";
+import URL from "../config/globalURL";
 
 export default function HomeScreen({ navigation }) {
   const currentUser = useSelector((state) => state.user);
@@ -23,7 +24,7 @@ export default function HomeScreen({ navigation }) {
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/products")
+    fetch(`${URL}/products`)
       .then((resp) => resp.json())
       .then((data) => {
         setProductList(
@@ -62,9 +63,6 @@ export default function HomeScreen({ navigation }) {
   }
 
   function renderProducts(item) {
-    if (currentUser && currentUser.id === item.user.id) {
-      return;
-    }
     return (
       <Pressable
         style={({ pressed }) => [
@@ -160,7 +158,11 @@ export default function HomeScreen({ navigation }) {
         style={{ backgroundColor: Colors.mainBG }}
         data={filteredProducts()}
         numColumns={3}
-        renderItem={({ item }) => renderProducts(item)}
+        renderItem={({ item }) =>
+          currentUser && currentUser.id === item.user.id
+            ? null
+            : renderProducts(item)
+        }
         showsVerticalScrollIndicator={false}
         getHeightForItem={({ item }) => 1}
       />

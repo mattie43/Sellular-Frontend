@@ -10,12 +10,35 @@ import {
   Dimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
+import URL from "../config/globalURL";
 
 function ProductScreen({ navigation, route }) {
+  const currentUser = useSelector((state) => state.user);
   const product = route.params;
   const dimensions = Dimensions.get("window").width;
+
+  function getConversation() {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        seller: product.user.id,
+        buyer: currentUser.id,
+        product: product.id,
+      }),
+    };
+    fetch(`${URL}/conversations`, options)
+      .then((resp) => resp.json())
+      .then((conversation) =>
+        navigation.navigate("SingleMessageScreen", { conversation, product })
+      );
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -92,8 +115,9 @@ function ProductScreen({ navigation, route }) {
         style={({ pressed }) => [
           styles.messageBtn,
           { opacity: pressed ? 0.6 : 1 },
+          { opacity: currentUser === null ? 0.6 : 1 },
         ]}
-        onPress={() => navigation.navigate("SingleMessageScreen", product)}
+        onPress={currentUser === null ? null : getConversation}
       >
         <Text style={styles.messageText}>Message the seller</Text>
       </Pressable>

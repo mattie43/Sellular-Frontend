@@ -11,24 +11,30 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
+import URL from "../config/globalURL";
 
 function AllMessagesScreen({ navigation, route }) {
+  const currentUser = useSelector((state) => state.user);
   const [showDelete, setShowDelete] = useState(false);
+  const [messageList, setMessageList] = useState([]);
+  const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetch(`${URL}/users/${currentUser.id}`)
+      .then((resp) => resp.json())
+      .then((data) => setMessageList(data));
+  }, []);
 
   function renderMessages() {
-    // get messages from DB and render them
-    const arr = [1, 2, 3, 4, 5];
-    return arr.map((message, i) => (
+    return messageList.map((message, i) => (
       <View key={i}>
         <Pressable
-          onPress={() => navigation.push("SingleMessageScreen")}
+          onPress={() => navigation.push("SingleMessageScreen", message)}
           style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
         >
           <View style={styles.singleMessageContainer}>
-            <Text style={styles.singleMessageText}>Seller Name</Text>
-            <Text style={styles.singleMessageText}>Product Name</Text>
+            <Text style={styles.singleMessageText}>{message.seller.email}</Text>
+            <Text style={styles.singleMessageText}>{message.product.name}</Text>
             <Pressable
               style={({ pressed }) => [
                 { display: showDelete ? "flex" : "none" },
@@ -40,7 +46,7 @@ function AllMessagesScreen({ navigation, route }) {
             </Pressable>
           </View>
         </Pressable>
-        {arr.length === i + 1 ? null : (
+        {messageList.length === i + 1 ? null : (
           <View
             style={{
               borderBottomWidth: 1,
@@ -70,7 +76,7 @@ function AllMessagesScreen({ navigation, route }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: Colors.mainBG }}>
       <View style={styles.messageBar}>
         <Text style={styles.title}>Messages</Text>
         <Pressable
@@ -88,8 +94,10 @@ function AllMessagesScreen({ navigation, route }) {
           alignSelf: "center",
         }}
       />
-      <View style={styles.messagesContainer}>{renderMessages()}</View>
-    </ScrollView>
+      <ScrollView style={styles.container}>
+        <View style={styles.messagesContainer}>{renderMessages()}</View>
+      </ScrollView>
+    </View>
   );
 }
 

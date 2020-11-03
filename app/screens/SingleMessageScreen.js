@@ -1,66 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Text, View, StyleSheet, Pressable } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector, useDispatch } from "react-redux";
 
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import firebaseConfig from "../firebase/firebase";
-
 import Colors from "../config/colors";
+import URL from "../config/globalURL";
 
 export default function SingleMessageScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
-  const seller = route.params.user;
-  const product = route.params;
+  const seller = route.params.seller || route.params.product.user;
+  const product = route.params.product;
+  const conversation = route.params.conversation;
+  const [messageList, setMessageList] = useState([]);
+  const [chatMsg, setChatMsg] = useState("");
 
-  async function fbtemp() {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const firestore = firebase.firestore();
-    let conversationID = "";
-    if (currentUser.id < seller.id) {
-      conversationID =
-        currentUser.id.toString() +
-        seller.id.toString() +
-        product.id.toString();
-    } else {
-      conversationID =
-        seller.id.toString() +
-        currentUser.id.toString() +
-        product.id.toString();
-    }
-    const conversation = firestore.collection("conversations");
-    conversation.exists ? console.log("no collection") : console.log("found");
-    const doc = await conversation.doc(conversationID).get();
-    if (!doc.exists) {
-      firestore.add("test");
-    } else {
-    }
-    // console.log("Document data:", doc.data());
-    // console.log(new Date());
+  useEffect(() => {
+    fetch(`${URL}/conversations/${conversation.id}`)
+      .then((resp) => resp.json())
+      .then((data) => setMessageList(data));
+  }, []);
+
+  function sendMsg() {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        message: {
+          message: chatMsg,
+          user_id: currentUser.id,
+          conversation_id: conversation.id,
+        },
+      }),
+    };
+    fetch(`${URL}/messages`, options)
+      .then((resp) => resp.json())
+      .then((data) => setMessageList(messageList.concat(data)));
+    setChatMsg("");
   }
 
-  // function chatRoom() {
-  //   const query = messagesRef.orderBy("createdAt").limit(25);
-  //   const [messages] = useCollectionData(query, { idField: "id" });
-
-  //   console.log(messages);
-  //   setTimeout(() => console.log("uid", newUser), 2000);
-  // }
-
-  // function sendMsg() {
-  //   messagesRef.add({
-  //     text: "test2",
-  //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //     id: "lIiDPJUWlfoMQC3gKque",
-  //   });
-  // }
+  function renderMessages() {
+    return messageList.map((message, i) => (
+      <View
+        style={
+          message.user_id === currentUser.id
+            ? styles.currentUserContainer
+            : styles.secondUserContainer
+        }
+        key={i}
+      >
+        <Text style={styles.messageText}>{message.message}</Text>
+      </View>
+    ));
+  }
 
   return (
     <View style={styles.container}>
@@ -123,12 +118,18 @@ export default function SingleMessageScreen({ navigation, route }) {
           alignSelf: "center",
         }}
       />
-      <Pressable onPress={fbtemp}>
-        <Text>CLICK</Text>
-      </Pressable>
+      <ScrollView>{renderMessages()}</ScrollView>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Chat here.." />
-        <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>
+        <TextInput
+          style={styles.input}
+          placeholder="Chat here.."
+          value={chatMsg}
+          onChangeText={(value) => setChatMsg(value)}
+        />
+        <Pressable
+          style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+          onPress={sendMsg}
+        >
           <Icon name="paper-plane" size={32} color={Colors.blueHighlight} />
         </Pressable>
       </View>
@@ -187,5 +188,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 3,
     // box shadow end
+  },
+  currentUserContainer: {
+    backgroundColor: Colors.blueHighlight,
+    padding: 10,
+    flexDirection: "row",
+    width: "60%",
+    alignSelf: "flex-end",
+    justifyContent: "flex-end",
+    marginTop: 7,
+    marginRight: 4,
+    borderRadius: 10,
+  },
+  secondUserContainer: {
+    backgroundColor: Colors.purpleHighlight,
+    padding: 10,
+    flexDirection: "row",
+    width: "60%",
+    marginTop: 7,
+    marginLeft: 4,
+    borderRadius: 10,
+  },
+  messageText: {
+    fontSize: 24,
+    color: Colors.mainBG,
   },
 });

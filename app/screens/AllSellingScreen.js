@@ -12,19 +12,18 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
+import URL from "../config/globalURL";
 
-function SellingStack({ navigation }) {
+function AllSellingScreen({ navigation }) {
   const currentUser = useSelector((state) => state.user);
   const sellingList = useSelector((state) => state.userProductList);
   const [showDelete, setShowDelete] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/users/${currentUser.id}`)
+    fetch(`${URL}/users/${currentUser.id}/products`)
       .then((resp) => resp.json())
-      .then((data) =>
-        dispatch({ type: "GET_PRODUCTS", payload: data.products })
-      );
+      .then((data) => dispatch({ type: "GET_PRODUCTS", payload: data }));
   }, []);
 
   function deleteMessage(id) {
@@ -76,7 +75,7 @@ function SellingStack({ navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={{ backgroundColor: Colors.mainBG, flex: 1 }}>
       <View style={styles.topBar}>
         <Text style={styles.title}>Your Current Sales</Text>
         <Pressable
@@ -95,12 +94,14 @@ function SellingStack({ navigation }) {
           alignSelf: "center",
         }}
       />
-      {renderProducts()}
-    </ScrollView>
+      <ScrollView style={styles.container}>
+        {sellingList ? renderProducts() : null}
+      </ScrollView>
+    </View>
   );
 }
 
-export default SellingStack;
+export default AllSellingScreen;
 
 const styles = StyleSheet.create({
   container: {

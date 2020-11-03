@@ -17,7 +17,10 @@ function SellingStack({ navigation, route }) {
 
   function renderCategories() {
     return ["Electronics", "Babies & Kids", "Games & Toys"].map((item, i) => (
-      <View style={{ marginRight: 6, marginLeft: 6, alignItems: "center" }}>
+      <View
+        key={i}
+        style={{ marginRight: 6, marginLeft: 6, alignItems: "center" }}
+      >
         <Icon name={showCategory[item]} size={30} color={Colors.ghostWhite} />
         <Text style={{ color: Colors.ghostWhite }}>{item}</Text>
       </View>
