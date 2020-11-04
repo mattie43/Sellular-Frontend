@@ -45,7 +45,9 @@ function UploadSubmit({ navigation, route }) {
         description: itemDesc,
         user_id: currentUser.id,
         image_64: photo.base64,
-        categories: selectedCategories,
+        category_one: selectedCategories[0],
+        category_two: selectedCategories[1],
+        category_three: selectedCategories[2],
       }),
     };
 
@@ -54,7 +56,7 @@ function UploadSubmit({ navigation, route }) {
       .then((data) => {
         dispatch({ type: "ADD_PRODUCT", payload: data });
         navigation.popToTop();
-        navigation.navigate("AllSellingScreen");
+        navigation.navigate("Selling");
       });
   }
 

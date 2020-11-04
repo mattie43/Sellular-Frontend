@@ -95,7 +95,7 @@ function AllSellingScreen({ navigation }) {
         }}
       />
       <ScrollView style={styles.container}>
-        {sellingList ? renderProducts() : null}
+        {sellingList.map && renderProducts()}
       </ScrollView>
     </View>
   );

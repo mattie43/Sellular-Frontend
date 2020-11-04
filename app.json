@@ -13,11 +13,14 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses geolocation.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses geolocation.",
+        "NSLocationAlwaysUsageDescription": "This app uses geolocation."
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

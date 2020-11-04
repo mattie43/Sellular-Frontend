@@ -95,7 +95,9 @@ function AllMessagesScreen({ navigation, route }) {
         }}
       />
       <ScrollView style={styles.container}>
-        <View style={styles.messagesContainer}>{renderMessages()}</View>
+        <View style={styles.messagesContainer}>
+          {messageList.map && renderMessages()}
+        </View>
       </ScrollView>
     </View>
   );
