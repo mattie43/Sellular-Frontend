@@ -16,9 +16,9 @@ import { useSelector, useDispatch } from "react-redux";
 import Colors from "../config/colors";
 import URL from "../config/globalURL";
 
-function ProfileScreen() {
+function ProfileScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
-  const [bio, setBio] = useState(currentUser.bio || "");
+  const [bio, setBio] = useState(currentUser ? currentUser.bio : "");
   const [editable, setEditable] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ function ProfileScreen() {
       body: JSON.stringify({ bio }),
     };
     fetch(`${URL}/users/${currentUser.id}`, options)
-      .then((resp) => resp.json)
+      .then((resp) => resp.json())
       .then((data) => {
         dispatch({ type: "LOG_IN", payload: data });
         setShowModal(false);
@@ -123,38 +123,62 @@ function ProfileScreen() {
     <View style={styles.container}>
       {modalDisplay()}
       <View style={styles.profileTop}>
-        <Pressable
-          style={({ pressed }) => [
-            { opacity: pressed ? 0.6 : 1 },
-            { position: "absolute", right: 14 },
-          ]}
-          onPress={() => dispatch({ type: "LOG_OUT" })}
-        >
-          <Icon name={"sign-out-alt"} size={24} color={Colors.ghostWhite} />
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            { opacity: pressed ? 0.6 : 1 },
-            { position: "absolute", left: 14 },
-          ]}
-          onPress={editableAlert}
-        >
-          <Icon
-            name={"user-edit"}
-            size={24}
-            color={editable ? Colors.blueHighlight : Colors.ghostWhite}
-          />
-        </Pressable>
+        {route.params ? (
+          <Pressable
+            style={({ pressed }) => [
+              { opacity: pressed ? 0.6 : 1 },
+              { position: "absolute", left: 5, top: 8 },
+            ]}
+            onPress={() => navigation.pop()}
+          >
+            <Icon
+              name={"arrow-left"}
+              size={30}
+              color={editable ? Colors.blueHighlight : Colors.ghostWhite}
+            />
+          </Pressable>
+        ) : (
+          <>
+            <Pressable
+              style={({ pressed }) => [
+                { opacity: pressed ? 0.6 : 1 },
+                { position: "absolute", right: 14 },
+              ]}
+              onPress={() => dispatch({ type: "LOG_OUT" })}
+            >
+              <Icon name={"sign-out-alt"} size={24} color={Colors.ghostWhite} />
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                { opacity: pressed ? 0.6 : 1 },
+                { position: "absolute", left: 14 },
+              ]}
+              onPress={editableAlert}
+            >
+              <Icon
+                name={"user-edit"}
+                size={24}
+                color={editable ? Colors.blueHighlight : Colors.ghostWhite}
+              />
+            </Pressable>
+          </>
+        )}
         <Pressable
           style={({ pressed }) => [{ opacity: pressed && editable ? 0.6 : 1 }]}
-          onPress={() => (editable ? console.log("pic click") : null)}
+          onPress={() =>
+            editable ? navigation.navigate("ProfileCamera") : null
+          }
         >
           <Image
-            source={{ uri: "https://www.w3schools.com/howto/img_avatar2.png" }}
+            source={{
+              uri: route.params ? route.params.img_url : currentUser.img_url,
+            }}
             style={styles.image}
           />
         </Pressable>
-        <Text style={styles.name}>{currentUser.username}</Text>
+        <Text style={styles.name}>
+          {route.params ? route.params.username : currentUser.username}
+        </Text>
         {/* <View style={{ flexDirection: "row" }}>
           <Icon name={"map-marker-alt"} size={24} color={Colors.ghostWhite} />
           <Text style={styles.location}>Location, USA</Text>
@@ -173,7 +197,10 @@ function ProfileScreen() {
           <Text style={styles.info}>Rating: </Text>
           {renderStar(3)}
         </View>
-        <Text style={styles.info}>Join Date: {currentUser.join_date}</Text>
+        <Text style={styles.info}>
+          Join Date:{" "}
+          {route.params ? route.params.join_date : currentUser.join_date}
+        </Text>
         <View
           style={{
             borderBottomWidth: 2,
@@ -183,14 +210,27 @@ function ProfileScreen() {
           }}
         />
       </View>
-      <View style={styles.profileBottom}>
-        <Pressable
-          style={({ pressed }) => [{ opacity: pressed && editable ? 0.6 : 1 }]}
-          onPress={() => (editable ? setShowModal(true) : null)}
+      <Pressable
+        style={({ pressed }) => [
+          {
+            opacity: pressed && editable ? 0.6 : 1,
+          },
+        ]}
+        onPress={() => (editable ? setShowModal(true) : null)}
+      >
+        <View
+          style={[
+            styles.profileBottom,
+            {
+              backgroundColor: editable ? "rgba(86, 214, 250, .3)" : null,
+            },
+          ]}
         >
-          <Text style={styles.bio}>{currentUser.bio}</Text>
-        </Pressable>
-      </View>
+          <Text style={styles.bio}>
+            {route.params ? route.params.bio : currentUser.bio}
+          </Text>
+        </View>
+      </Pressable>
     </View>
   );
 }
@@ -245,10 +285,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   profileBottom: {
-    height: "40%",
+    height: "38%",
     width: "85%",
     justifyContent: "center",
     alignItems: "center",
+    margin: 10,
   },
   modal: {
     backgroundColor: Colors.cardBG,

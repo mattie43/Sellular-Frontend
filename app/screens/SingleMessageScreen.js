@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Image, Text, View, StyleSheet, Pressable } from "react-native";
+import {
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  KeyboardAvoidingView,
+} from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Colors from "../config/colors";
 import URL from "../config/globalURL";
 
 export default function SingleMessageScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
-  const seller = route.params.seller || route.params.product.user;
+  const seller = route.params.seller;
+  const buyer = route.params.buyer;
   const product = route.params.product;
   const conversation = route.params.conversation;
   const [messageList, setMessageList] = useState([]);
@@ -87,12 +95,15 @@ export default function SingleMessageScreen({ navigation, route }) {
           >
             <Image
               source={{
-                uri: "https://www.w3schools.com/howto/img_avatar2.png",
+                uri:
+                  currentUser.id === seller.id ? buyer.img_url : seller.img_url,
               }}
               style={styles.image}
             />
           </Pressable>
-          <Text style={styles.infoText}>{seller.email}</Text>
+          <Text style={styles.infoText}>
+            {currentUser.id === seller.id ? buyer.username : seller.username}
+          </Text>
         </View>
         <View>
           <Pressable
@@ -119,7 +130,7 @@ export default function SingleMessageScreen({ navigation, route }) {
         }}
       />
       <ScrollView>{renderMessages()}</ScrollView>
-      <View style={styles.inputContainer}>
+      <KeyboardAvoidingView behavior="padding" style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           placeholder="Chat here.."
@@ -132,7 +143,7 @@ export default function SingleMessageScreen({ navigation, route }) {
         >
           <Icon name="paper-plane" size={32} color={Colors.blueHighlight} />
         </Pressable>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -154,10 +165,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   inputContainer: {
-    position: "absolute",
-    bottom: 0,
     backgroundColor: Colors.cardBG,
-    padding: 4,
+    paddingHorizontal: 6,
     width: "100%",
     alignItems: "center",
     flexDirection: "row",
@@ -165,7 +174,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     margin: 5,
-    bottom: 0,
     padding: 12,
     color: Colors.darkBG,
     backgroundColor: Colors.ghostWhite,

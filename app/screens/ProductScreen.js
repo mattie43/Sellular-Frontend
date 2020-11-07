@@ -19,6 +19,7 @@ function ProductScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
   const product = route.params;
   const dimensions = Dimensions.get("window").width;
+  const dispatch = useDispatch();
 
   function getConversation() {
     const options = {
@@ -35,9 +36,10 @@ function ProductScreen({ navigation, route }) {
     };
     fetch(`${URL}/conversations`, options)
       .then((resp) => resp.json())
-      .then((conversation) =>
-        navigation.navigate("SingleMessageScreen", { conversation, product })
-      );
+      .then((conversation) => {
+        dispatch({ type: "ADD_CONVERSATION", payload: conversation });
+        navigation.navigate("SingleMessageScreen", conversation);
+      });
   }
 
   return (
@@ -70,7 +72,10 @@ function ProductScreen({ navigation, route }) {
         Posted{" "}
         {product.post_date < 1 ? "Today" : product.post_date + " days ago"}
       </Text>
-      <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>
+      <Pressable
+        style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+        onPress={() => navigation.push("ProfileScreen", product.user)}
+      >
         <View
           style={[
             styles.card,
@@ -83,10 +88,10 @@ function ProductScreen({ navigation, route }) {
         >
           <Image
             style={{ height: 100, width: 100, borderRadius: 100 }}
-            source={{ uri: "https://www.w3schools.com/howto/img_avatar2.png" }}
+            source={{ uri: product.user.img_url }}
           />
           <Text style={[styles.name, { alignSelf: "auto" }]}>
-            {product.user.email}
+            {product.user.username}
           </Text>
         </View>
       </Pressable>

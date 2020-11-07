@@ -6,7 +6,7 @@ import UploadSubmit from "../screens/UploadSubmit";
 
 const Stack = createStackNavigator();
 
-export default function HomeStack() {
+export default function UploadStack() {
   return (
     <Stack.Navigator headerMode={"none"}>
       <Stack.Screen name="UploadCamera" component={UploadCamera} />

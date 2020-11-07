@@ -17,6 +17,7 @@ import URL from "../config/globalURL";
 function AllSellingScreen({ navigation }) {
   const currentUser = useSelector((state) => state.user);
   const sellingList = useSelector((state) => state.userProductList);
+  const [itemList, setItemList] = useState([]);
   const [showDelete, setShowDelete] = useState(false);
   const dispatch = useDispatch();
 
@@ -26,23 +27,39 @@ function AllSellingScreen({ navigation }) {
       .then((data) => dispatch({ type: "GET_PRODUCTS", payload: data }));
   }, []);
 
-  function deleteMessage(id) {
+  useEffect(() => {
+    setItemList(sellingList);
+  }, [sellingList]);
+
+  function deleteMessageAlert(id) {
     Alert.alert("", "Are you sure you want to delete this product?", [
       {
         text: "Yes",
-        onPress: () => console.log("yes"),
+        onPress: () => deleteProduct(id),
         style: "default",
       },
       {
         text: "No",
-        onPress: () => console.log("no"),
         style: "default",
       },
     ]);
   }
 
+  function deleteProduct(id) {
+    const options = {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    };
+    fetch(`${URL}/products/${id}`, options).then(() =>
+      setItemList(sellingList.filter((product) => product.id !== id))
+    );
+  }
+
   function renderProducts() {
-    return sellingList.map((item) => (
+    return itemList.map((item) => (
       <Pressable
         key={item.id}
         style={({ pressed }) => [
@@ -60,7 +77,7 @@ function AllSellingScreen({ navigation }) {
               { display: showDelete ? "flex" : "none" },
               { opacity: pressed ? 0.6 : 1 },
             ]}
-            onPress={() => deleteMessage(item.id)}
+            onPress={() => deleteMessageAlert(item.id)}
           >
             <Icon name={"times"} size={20} color="red" />
           </Pressable>

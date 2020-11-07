@@ -15,14 +15,14 @@ import URL from "../config/globalURL";
 
 function AllMessagesScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
+  const messageList = useSelector((state) => state.conversations);
   const [showDelete, setShowDelete] = useState(false);
-  const [messageList, setMessageList] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch(`${URL}/users/${currentUser.id}`)
+    fetch(`${URL}/users/${currentUser.id}/convos`)
       .then((resp) => resp.json())
-      .then((data) => setMessageList(data));
+      .then((data) => dispatch({ type: "GET_CONVERSATIONS", payload: data }));
   }, []);
 
   function renderMessages() {
@@ -33,14 +33,25 @@ function AllMessagesScreen({ navigation, route }) {
           style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
         >
           <View style={styles.singleMessageContainer}>
-            <Text style={styles.singleMessageText}>{message.seller.email}</Text>
+            <Text style={styles.singleMessageText}>
+              {message.seller.id === currentUser.id
+                ? message.buyer.username
+                : message.seller.username}
+            </Text>
+            <View
+              style={{
+                borderLeftColor: Colors.blueHighlight,
+                borderLeftWidth: 1,
+                height: "100%",
+              }}
+            />
             <Text style={styles.singleMessageText}>{message.product.name}</Text>
             <Pressable
               style={({ pressed }) => [
                 { display: showDelete ? "flex" : "none" },
                 { opacity: pressed ? 0.6 : 1 },
               ]}
-              onPress={() => deleteMessage(i)}
+              onPress={() => deleteMessageAlert(message.conversation.id)}
             >
               <Icon name={"times"} size={20} color="red" />
             </Pressable>
@@ -60,19 +71,31 @@ function AllMessagesScreen({ navigation, route }) {
     ));
   }
 
-  function deleteMessage(i) {
+  function deleteMessageAlert(convoID) {
     Alert.alert("", "Are you sure you want to delete this conversation?", [
       {
         text: "Yes",
-        onPress: () => console.log("yes"),
+        onPress: () => deleteMessage(convoID),
         style: "default",
       },
       {
         text: "No",
-        onPress: () => console.log("no"),
         style: "default",
       },
     ]);
+  }
+
+  function deleteMessage(convoID) {
+    const options = {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    };
+    fetch(`${URL}/conversations/${convoID}`, options).then(() =>
+      dispatch({ type: "DELETE_CONVERSATION", payload: convoID })
+    );
   }
 
   return (
@@ -96,7 +119,7 @@ function AllMessagesScreen({ navigation, route }) {
       />
       <ScrollView style={styles.container}>
         <View style={styles.messagesContainer}>
-          {messageList.map && renderMessages()}
+          {messageList.map.length ? renderMessages() : null}
         </View>
       </ScrollView>
     </View>
@@ -137,7 +160,7 @@ const styles = StyleSheet.create({
   },
   singleMessageContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     alignItems: "center",
     padding: 10,
   },

@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 import HomeStack from "./HomeStack";
 import SellingStack from "./SellingStack";
 import UploadStack from "./UploadStack";
+import ProfileStack from "./ProfileStack";
 
-import ProfileScreen from "../screens/ProfileScreen";
 import Colors from "../config/colors";
 import AllMessagesScreen from "../screens/AllMessagesScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -72,7 +72,7 @@ export default function HomeTabs() {
       />
       <Tab.Screen
         name="Profile"
-        component={currentUser ? ProfileScreen : LoginScreen}
+        component={currentUser ? ProfileStack : LoginScreen}
         options={{
           tabBarColor: Colors.cardBG,
           tabBarLabel: "Profile",

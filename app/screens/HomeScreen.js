@@ -38,14 +38,6 @@ export default function HomeScreen({ navigation }) {
       });
   }, [isFetching]);
 
-  function onRefresh() {
-    setIsFetching(true);
-  }
-
-  function updateSearch(e) {
-    setSearch(e);
-  }
-
   function categoryCheck() {
     if (currentCategory === "") {
       return productList;
@@ -57,9 +49,14 @@ export default function HomeScreen({ navigation }) {
   }
 
   function filteredProducts() {
-    return categoryCheck().filter((product) =>
+    let items = categoryCheck().filter((product) =>
       product.name.toLowerCase().includes(search.toLowerCase())
     );
+    if (currentUser) {
+      return items.filter((product) => product.user.id !== currentUser.id);
+    } else {
+      return items;
+    }
   }
 
   function renderProducts(item) {
@@ -132,7 +129,7 @@ export default function HomeScreen({ navigation }) {
     <>
       <SearchBar
         placeholder="Search here.."
-        onChangeText={updateSearch}
+        onChangeText={(text) => setSearch(text)}
         value={search}
         inputContainerStyle={{ height: "100%", backgroundColor: Colors.cardBG }}
         containerStyle={{
@@ -153,16 +150,12 @@ export default function HomeScreen({ navigation }) {
         </ScrollView>
       </View>
       <MasonryList
-        onRefresh={() => onRefresh()}
+        onRefresh={() => setIsFetching(true)}
         refreshing={isFetching}
         style={{ backgroundColor: Colors.mainBG }}
         data={filteredProducts()}
         numColumns={3}
-        renderItem={({ item }) =>
-          currentUser && currentUser.id === item.user.id
-            ? null
-            : renderProducts(item)
-        }
+        renderItem={({ item }) => renderProducts(item)}
         showsVerticalScrollIndicator={false}
         getHeightForItem={({ item }) => 1}
       />

@@ -5,7 +5,7 @@ import SingleSellingScreen from "../screens/SingleSellingScreen";
 
 const Stack = createStackNavigator();
 
-export default function HomeStack() {
+export default function SellingStack() {
   return (
     <Stack.Navigator headerMode={"none"}>
       <Stack.Screen name="AllSellingScreen" component={AllSellingScreen} />

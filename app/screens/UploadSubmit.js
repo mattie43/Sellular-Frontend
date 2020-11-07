@@ -25,9 +25,11 @@ function UploadSubmit({ navigation, route }) {
   const [itemCent, setItemCent] = useState("00");
   const [itemDesc, setItemDesc] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [updating, setUpdating] = useState(false);
   const dispatch = useDispatch();
 
   function sendToBackend() {
+    setUpdating(true);
     const price =
       itemDollar.replace(/\D/g, "") +
       "." +
@@ -55,8 +57,9 @@ function UploadSubmit({ navigation, route }) {
       .then((resp) => resp.json())
       .then((data) => {
         dispatch({ type: "ADD_PRODUCT", payload: data });
+        setUpdating(false);
         navigation.popToTop();
-        navigation.navigate("Selling");
+        navigation.navigate("AllSellingScreen");
       });
   }
 
@@ -175,18 +178,21 @@ function UploadSubmit({ navigation, route }) {
             <Pressable
               style={({ pressed }) => [
                 styles.buttons,
-                { opacity: pressed ? 0.6 : 1 },
+                { opacity: pressed || updating ? 0.6 : 1 },
               ]}
-              onPress={() => navigation.popToTop()}
+              onPress={() => (updating ? null : navigation.popToTop())}
             >
               <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
             <Pressable
               style={({ pressed }) => [
                 styles.buttons,
-                { opacity: pressed ? 0.6 : 1, backgroundColor: "green" },
+                {
+                  opacity: pressed || updating ? 0.6 : 1,
+                  backgroundColor: "green",
+                },
               ]}
-              onPress={sendToBackend}
+              onPress={updating ? null : sendToBackend}
             >
               <Text style={styles.cancelText}>Upload</Text>
             </Pressable>
