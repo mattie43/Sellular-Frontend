@@ -10,21 +10,25 @@ export default function rootReducer(state = INITIAL_STATE, action) {
     case "LOG_IN":
       return { ...state, user: action.payload };
     case "LOG_OUT":
-      return { user: null, userProductList: [], messages: [] };
+      return {
+        user: null,
+        userProductList: [],
+        messages: [],
+        conversations: [],
+      };
     case "GET_PRODUCTS":
       return { ...state, userProductList: action.payload };
-    case "UPDATE_PRODUCT":
-      let temp = state.userProductList;
-      let index = temp.findIndex((product) => product.id === action.payload);
-      temp[index].sold = true;
-      return {
-        ...state,
-        userProductList: temp,
-      };
     case "ADD_PRODUCT":
       return {
         ...state,
         userProductList: state.userProductList.concat(action.payload),
+      };
+    case "DELETE_PRODUCT":
+      return {
+        ...state,
+        userProductList: state.userProductList.filter(
+          (product) => product.id !== action.payload
+        ),
       };
     case "GET_CONVERSATIONS":
       return { ...state, conversations: action.payload };

@@ -6,12 +6,15 @@ import {
   ScrollView,
   Pressable,
   Alert,
+  Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 import URL from "../config/globalURL";
+import sold from "../../assets/sold.png";
+import { useFocusEffect } from "@react-navigation/native";
 
 function AllMessagesScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
@@ -19,11 +22,13 @@ function AllMessagesScreen({ navigation, route }) {
   const [showDelete, setShowDelete] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetch(`${URL}/users/${currentUser.id}/convos`)
-      .then((resp) => resp.json())
-      .then((data) => dispatch({ type: "GET_CONVERSATIONS", payload: data }));
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetch(`${URL}/users/${currentUser.id}/convos`)
+        .then((resp) => resp.json())
+        .then((data) => dispatch({ type: "GET_CONVERSATIONS", payload: data }));
+    }, [])
+  );
 
   function renderMessages() {
     return messageList.map((message, i) => (
@@ -32,6 +37,18 @@ function AllMessagesScreen({ navigation, route }) {
           onPress={() => navigation.push("SingleMessageScreen", message)}
           style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
         >
+          {message.product.sold ? (
+            <Image
+              source={sold}
+              style={{
+                position: "absolute",
+                height: 60,
+                width: 60,
+                left: 0,
+                bottom: -7,
+              }}
+            />
+          ) : null}
           <View style={styles.singleMessageContainer}>
             <Text style={styles.singleMessageText}>
               {message.seller.id === currentUser.id
@@ -118,9 +135,7 @@ function AllMessagesScreen({ navigation, route }) {
         }}
       />
       <ScrollView style={styles.container}>
-        <View style={styles.messagesContainer}>
-          {messageList.map.length ? renderMessages() : null}
-        </View>
+        <View style={styles.messagesContainer}>{renderMessages()}</View>
       </ScrollView>
     </View>
   );

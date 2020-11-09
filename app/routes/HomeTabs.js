@@ -11,6 +11,7 @@ import ProfileStack from "./ProfileStack";
 
 import Colors from "../config/colors";
 import AllMessagesScreen from "../screens/AllMessagesScreen";
+import AllSellingScreen from "../screens/AllSellingScreen";
 import LoginScreen from "../screens/LoginScreen";
 
 const Tab = createMaterialBottomTabNavigator();

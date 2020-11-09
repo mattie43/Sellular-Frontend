@@ -6,13 +6,16 @@ import {
   StyleSheet,
   Pressable,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector } from "react-redux";
+import Svg, { Path } from "react-native-svg";
 
 import Colors from "../config/colors";
 import URL from "../config/globalURL";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function SingleMessageScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
@@ -21,13 +24,23 @@ export default function SingleMessageScreen({ navigation, route }) {
   const product = route.params.product;
   const conversation = route.params.conversation;
   const [messageList, setMessageList] = useState([]);
+  const [starCount, setStarCount] = useState(0);
+  const [productRated, setProductRated] = useState(product.rated);
   const [chatMsg, setChatMsg] = useState("");
 
-  useEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchMessages();
+      let getMsg = setInterval(fetchMessages, 2000);
+      return () => clearInterval(getMsg);
+    }, [])
+  );
+
+  function fetchMessages() {
     fetch(`${URL}/conversations/${conversation.id}`)
       .then((resp) => resp.json())
       .then((data) => setMessageList(data));
-  }, []);
+  }
 
   function sendMsg() {
     const options = {
@@ -63,6 +76,57 @@ export default function SingleMessageScreen({ navigation, route }) {
         <Text style={styles.messageText}>{message.message}</Text>
       </View>
     ));
+  }
+
+  function renderStar() {
+    const returnStars = [];
+    let goldCount = 0;
+    for (let i = 1; i < 6; i++) {
+      returnStars.push(
+        <Pressable key={i} onPress={() => setStarCount(i)}>
+          <Svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <Path
+              fill={goldCount < starCount ? "#F8D64E" : Colors.selectionBG}
+              d="m48,234 73-226 73,226-192-140h238z"
+              scale=".2"
+            />
+          </Svg>
+        </Pressable>
+      );
+      goldCount++;
+    }
+    return returnStars;
+  }
+
+  function submitRatingAlert() {
+    Alert.alert(
+      "",
+      `Are you sure you want to give a ${starCount} star rating?`,
+      [
+        {
+          text: "Yes",
+          onPress: ratingSet,
+          style: "default",
+        },
+        {
+          text: "No",
+          style: "default",
+        },
+      ]
+    );
+  }
+
+  function ratingSet() {
+    setProductRated(true);
+    const options = {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({ rating: starCount, seller: seller.id }),
+    };
+    fetch(`${URL}/products/${product.id}/rating`, options);
   }
 
   return (
@@ -130,20 +194,55 @@ export default function SingleMessageScreen({ navigation, route }) {
         }}
       />
       <ScrollView>{renderMessages()}</ScrollView>
-      <KeyboardAvoidingView behavior="padding" style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Chat here.."
-          value={chatMsg}
-          onChangeText={(value) => setChatMsg(value)}
-        />
-        <Pressable
-          style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
-          onPress={sendMsg}
-        >
-          <Icon name="paper-plane" size={32} color={Colors.blueHighlight} />
-        </Pressable>
-      </KeyboardAvoidingView>
+      {product.sold ? (
+        <View>
+          <Text
+            style={[
+              styles.messageText,
+              { color: Colors.ghostWhite, textAlign: "center" },
+            ]}
+          >
+            {seller.id === currentUser.id
+              ? "You have marked this product as sold."
+              : "This product has been sold. Give this seller a rating!"}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              margin: 10,
+            }}
+          >
+            {seller.id === currentUser.id ? null : renderStar()}
+          </View>
+          {seller.id === currentUser.id ? null : (
+            <Pressable
+              style={({ pressed }) => [
+                styles.submitBtn,
+                { opacity: pressed || productRated ? 0.6 : 1 },
+              ]}
+              onPress={productRated ? null : submitRatingAlert}
+            >
+              <Text style={styles.submitText}>Submit</Text>
+            </Pressable>
+          )}
+        </View>
+      ) : (
+        <KeyboardAvoidingView behavior="padding" style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Chat here.."
+            value={chatMsg}
+            onChangeText={(value) => setChatMsg(value)}
+          />
+          <Pressable
+            style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+            onPress={sendMsg}
+          >
+            <Icon name="paper-plane" size={32} color={Colors.blueHighlight} />
+          </Pressable>
+        </KeyboardAvoidingView>
+      )}
     </View>
   );
 }
@@ -220,5 +319,29 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 24,
     color: Colors.mainBG,
+  },
+  submitText: {
+    color: Colors.ghostWhite,
+    fontSize: 30,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  submitBtn: {
+    backgroundColor: Colors.blueHighlight,
+    width: "50%",
+    alignSelf: "center",
+    padding: 6,
+    borderRadius: 10,
+    marginBottom: 8,
+    // box shadow
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // box shadow end
   },
 });

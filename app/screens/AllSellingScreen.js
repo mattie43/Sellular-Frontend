@@ -13,23 +13,22 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../config/colors";
 import URL from "../config/globalURL";
+import sold from "../../assets/sold.png";
+import { useFocusEffect } from "@react-navigation/native";
 
 function AllSellingScreen({ navigation }) {
   const currentUser = useSelector((state) => state.user);
-  const sellingList = useSelector((state) => state.userProductList);
-  const [itemList, setItemList] = useState([]);
+  const itemList = useSelector((state) => state.userProductList);
   const [showDelete, setShowDelete] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetch(`${URL}/users/${currentUser.id}/products`)
-      .then((resp) => resp.json())
-      .then((data) => dispatch({ type: "GET_PRODUCTS", payload: data }));
-  }, []);
-
-  useEffect(() => {
-    setItemList(sellingList);
-  }, [sellingList]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetch(`${URL}/users/${currentUser.id}/products`)
+        .then((resp) => resp.json())
+        .then((data) => dispatch({ type: "GET_PRODUCTS", payload: data }));
+    }, [])
+  );
 
   function deleteMessageAlert(id) {
     Alert.alert("", "Are you sure you want to delete this product?", [
@@ -54,7 +53,7 @@ function AllSellingScreen({ navigation }) {
       },
     };
     fetch(`${URL}/products/${id}`, options).then(() =>
-      setItemList(sellingList.filter((product) => product.id !== id))
+      dispatch({ type: "DELETE_PRODUCT", payload: id })
     );
   }
 
@@ -82,6 +81,18 @@ function AllSellingScreen({ navigation }) {
             <Icon name={"times"} size={20} color="red" />
           </Pressable>
           <Image source={{ uri: item.img_url }} style={styles.image} />
+          {item.sold ? (
+            <Image
+              source={sold}
+              style={{
+                position: "absolute",
+                height: 80,
+                width: 80,
+                left: 0,
+                bottom: 0,
+              }}
+            />
+          ) : null}
           <View style={styles.itemTextContainer}>
             <Text style={styles.itemText}>{item.name}</Text>
             <Text style={styles.itemText}>${item.price}</Text>
@@ -111,9 +122,7 @@ function AllSellingScreen({ navigation }) {
           alignSelf: "center",
         }}
       />
-      <ScrollView style={styles.container}>
-        {sellingList.map && renderProducts()}
-      </ScrollView>
+      <ScrollView style={styles.container}>{renderProducts()}</ScrollView>
     </View>
   );
 }

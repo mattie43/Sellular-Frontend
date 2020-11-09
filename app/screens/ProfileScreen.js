@@ -195,7 +195,7 @@ function ProfileScreen({ navigation, route }) {
       <View style={styles.profileMiddle}>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.info}>Rating: </Text>
-          {renderStar(3)}
+          {renderStar(route.params ? route.params.rating : currentUser.rating)}
         </View>
         <Text style={styles.info}>
           Join Date:{" "}

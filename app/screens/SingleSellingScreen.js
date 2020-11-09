@@ -16,6 +16,7 @@ import { showCategory } from "../config/categories";
 import URL from "../config/globalURL";
 
 function SellingStack({ navigation, route }) {
+  const currentUser = useSelector((state) => state.user);
   const [item, setItem] = useState(route.params);
   // const item = route.params;
   const dispatch = useDispatch();
@@ -54,9 +55,16 @@ function SellingStack({ navigation, route }) {
     };
     fetch(`${URL}/products/${item.id}`, options)
       .then((resp) => resp.json())
-      .then((data) => {
-        dispatch({ type: "UPDATE_PRODUCT", payload: data.id });
+      .then(() => {
         setItem({ ...item, sold: true });
+        fetch(`${URL}/users/${currentUser.id}/products`)
+          .then((resp) => resp.json())
+          .then((data) => dispatch({ type: "GET_PRODUCTS", payload: data }));
+        fetch(`${URL}/users/${currentUser.id}/convos`)
+          .then((resp) => resp.json())
+          .then((data) =>
+            dispatch({ type: "GET_CONVERSATIONS", payload: data })
+          );
       });
   }
 
