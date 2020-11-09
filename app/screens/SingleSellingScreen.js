@@ -57,14 +57,6 @@ function SellingStack({ navigation, route }) {
       .then((resp) => resp.json())
       .then(() => {
         setItem({ ...item, sold: true });
-        fetch(`${URL}/users/${currentUser.id}/products`)
-          .then((resp) => resp.json())
-          .then((data) => dispatch({ type: "GET_PRODUCTS", payload: data }));
-        fetch(`${URL}/users/${currentUser.id}/convos`)
-          .then((resp) => resp.json())
-          .then((data) =>
-            dispatch({ type: "GET_CONVERSATIONS", payload: data })
-          );
       });
   }
 

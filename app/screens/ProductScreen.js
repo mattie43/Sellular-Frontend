@@ -17,7 +17,8 @@ import URL from "../config/globalURL";
 
 function ProductScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
-  const product = route.params;
+  const product = route.params.product || route.params;
+  const productUser = route.params.user || route.params.seller;
   const dimensions = Dimensions.get("window").width;
   const dispatch = useDispatch();
 
@@ -72,29 +73,31 @@ function ProductScreen({ navigation, route }) {
         Posted{" "}
         {product.post_date < 1 ? "Today" : product.post_date + " days ago"}
       </Text>
-      <Pressable
-        style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
-        onPress={() => navigation.push("ProfileScreen", product.user)}
-      >
-        <View
-          style={[
-            styles.card,
-            {
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              marginBottom: 5,
-            },
-          ]}
+      {route.params.seller ? null : (
+        <Pressable
+          style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+          onPress={() => navigation.push("ProfileScreen", product.user)}
         >
-          <Image
-            style={{ height: 100, width: 100, borderRadius: 100 }}
-            source={{ uri: product.user.img_url }}
-          />
-          <Text style={[styles.name, { alignSelf: "auto" }]}>
-            {product.user.username}
-          </Text>
-        </View>
-      </Pressable>
+          <View
+            style={[
+              styles.card,
+              {
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                marginBottom: 5,
+              },
+            ]}
+          >
+            <Image
+              style={{ height: 100, width: 100, borderRadius: 100 }}
+              source={{ uri: productUser.img_url }}
+            />
+            <Text style={[styles.name, { alignSelf: "auto" }]}>
+              {productUser.username}
+            </Text>
+          </View>
+        </Pressable>
+      )}
       <View style={styles.card}>
         <View
           style={{
@@ -116,16 +119,18 @@ function ProductScreen({ navigation, route }) {
         />
         <Text style={styles.desc}>{product.description}</Text>
       </View>
-      <Pressable
-        style={({ pressed }) => [
-          styles.messageBtn,
-          { opacity: pressed ? 0.6 : 1 },
-          { opacity: currentUser === null ? 0.6 : 1 },
-        ]}
-        onPress={currentUser === null ? null : getConversation}
-      >
-        <Text style={styles.messageText}>Message the seller</Text>
-      </Pressable>
+      {route.params.seller ? null : (
+        <Pressable
+          style={({ pressed }) => [
+            styles.messageBtn,
+            { opacity: pressed ? 0.6 : 1 },
+            { opacity: currentUser === null ? 0.6 : 1 },
+          ]}
+          onPress={currentUser === null ? null : getConversation}
+        >
+          <Text style={styles.messageText}>Message the seller</Text>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }

@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import { store } from "./app/store/store";
 import HomeTabs from "./app/routes/HomeTabs";
 import SingleMessage from "./app/screens/SingleMessageScreen";
+import ProfileScreen from "./app/screens/ProfileScreen";
+import ProductScreen from "./app/screens/ProductScreen";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +24,8 @@ export default function App() {
               name="SingleMessageScreen"
               component={SingleMessage}
             />
+            <Stack.Screen name="ProductScreen" component={ProductScreen} />
+            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

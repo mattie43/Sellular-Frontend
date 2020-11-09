@@ -7,15 +7,16 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Alert,
+  Modal,
 } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector } from "react-redux";
 import Svg, { Path } from "react-native-svg";
+import { useFocusEffect } from "@react-navigation/native";
 
 import Colors from "../config/colors";
 import URL from "../config/globalURL";
-import { useFocusEffect } from "@react-navigation/native";
 
 export default function SingleMessageScreen({ navigation, route }) {
   const currentUser = useSelector((state) => state.user);
@@ -31,8 +32,10 @@ export default function SingleMessageScreen({ navigation, route }) {
   useFocusEffect(
     React.useCallback(() => {
       fetchMessages();
-      let getMsg = setInterval(fetchMessages, 2000);
-      return () => clearInterval(getMsg);
+      if (!product.sold) {
+        let getMsg = setInterval(fetchMessages, 2000);
+        return () => clearInterval(getMsg);
+      }
     }, [])
   );
 
@@ -144,18 +147,18 @@ export default function SingleMessageScreen({ navigation, route }) {
           { opacity: pressed ? 0.6 : 1 },
         ]}
       >
-        <Icon
-          name="arrow-left"
-          size={30}
-          color={Colors.darkBG}
-          style={styles.backIcon}
-        />
+        <Icon name="arrow-left" size={30} color={Colors.ghostWhite} />
       </Pressable>
       <View style={styles.messageInfo}>
         <View>
           <Pressable
             style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
-            onPress={() => console.log("seller pressed")}
+            onPress={() =>
+              navigation.push(
+                "ProfileScreen",
+                currentUser.id === seller.id ? buyer : seller
+              )
+            }
           >
             <Image
               source={{
@@ -172,7 +175,9 @@ export default function SingleMessageScreen({ navigation, route }) {
         <View>
           <Pressable
             style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
-            onPress={() => console.log("product pressed")}
+            onPress={() =>
+              navigation.push("ProductScreen", { product, seller })
+            }
           >
             <Image
               source={{
@@ -204,6 +209,8 @@ export default function SingleMessageScreen({ navigation, route }) {
           >
             {seller.id === currentUser.id
               ? "You have marked this product as sold."
+              : productRated
+              ? "This product has been sold & you already gave this seller a rating."
               : "This product has been sold. Give this seller a rating!"}
           </Text>
           <View
@@ -213,9 +220,9 @@ export default function SingleMessageScreen({ navigation, route }) {
               margin: 10,
             }}
           >
-            {seller.id === currentUser.id ? null : renderStar()}
+            {seller.id === currentUser.id || productRated ? null : renderStar()}
           </View>
-          {seller.id === currentUser.id ? null : (
+          {seller.id === currentUser.id || productRated ? null : (
             <Pressable
               style={({ pressed }) => [
                 styles.submitBtn,
@@ -285,17 +292,6 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     margin: 10,
   },
-  backIcon: {
-    // box shadow
-    shadowColor: Colors.ghostWhite,
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 3,
-    // box shadow end
-  },
   currentUserContainer: {
     backgroundColor: Colors.blueHighlight,
     padding: 10,
@@ -343,5 +339,14 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     // box shadow end
+  },
+  modal: {
+    backgroundColor: Colors.cardBG,
+    height: "80%",
+    width: "90%",
+    alignSelf: "center",
+    opacity: 0.98,
+    top: 60,
+    borderRadius: 10,
   },
 });
